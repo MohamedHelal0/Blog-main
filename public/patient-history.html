@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة المريض - السجل الطبي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FFFFFF;
+            --main: #2C7DA0;
+            --dark: #1F5068;
+            --light: #EEF4FC;
+            --text: #1A2C3E;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, var(--main) 0%, var(--dark) 100%);
+            color: var(--text);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--main);
+            border-radius: 10px;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: var(--primary);
+            border-radius: 40px;
+            padding: 60px 50px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--main), var(--dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            box-shadow: 0 15px 40px rgba(44, 125, 160, 0.3);
+        }
+
+        .login-icon i {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .login-header h1 {
+            color: var(--dark);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+
+        .form-group label i {
+            margin-left: 8px;
+            color: var(--main);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 18px 22px;
+            border: 2px solid var(--light);
+            border-radius: 18px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--main);
+            background: var(--primary);
+            box-shadow: 0 0 0 4px rgba(44, 125, 160, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .btn {
+            padding: 18px 35px;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--main), var(--dark));
+            color: var(--primary);
+            box-shadow: 0 10px 30px rgba(44, 125, 160, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(44, 125, 160, 0.4);
+        }
+
+        .error-message {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+            padding: 18px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .error-message.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 30px;
+            color: var(--main);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--dark);
+        }
+
+        /* Patient Portal */
+        .patient-portal {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .patient-portal.active {
+            display: block;
+        }
+
+        .portal-header {
+            background: var(--primary);
+            padding: 25px 30px;
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .welcome-text {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .welcome-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--main), var(--dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-avatar i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .welcome-info h2 {
+            color: var(--dark);
+            font-size: 1.3rem;
+        }
+
+        .welcome-info p {
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--primary);
+            padding: 12px 25px;
+            border-radius: 20px;
+            border: none;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .portal-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Info Cards Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: var(--primary);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .card-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--main), var(--dark));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .card-icon i {
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .card-title {
+            color: var(--dark);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .card-content {
+            color: var(--text);
+        }
+
+        /* Personal Info Card */
+        .personal-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-item .label {
+            font-size: 0.85rem;
+            color: var(--text);
+            opacity: 0.6;
+        }
+
+        .info-item .value {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .blood-type {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+            color: var(--primary);
+            padding: 8px 18px;
+            border-radius: 15px;
+            display: inline-block;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* Medical Items */
+        .medical-list {
+            list-style: none;
+        }
+
+        .medical-item {
+            padding: 18px 0;
+            border-bottom: 1px solid var(--light);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .medical-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .medical-item i {
+            color: var(--main);
+            font-size: 1.1rem;
+            margin-top: 3px;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .item-details {
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        .item-date {
+            font-size: 0.85rem;
+            color: var(--main);
+            font-weight: 500;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin: 3px;
+            font-weight: 500;
+        }
+
+        .badge-warning {
+            background: rgba(255, 193, 7, 0.15);
+            color: #d39e00;
+        }
+
+        .badge-danger {
+            background: rgba(220, 53, 69, 0.15);
+            color: var(--danger);
+        }
+
+        .badge-info {
+            background: rgba(44, 125, 160, 0.15);
+            color: var(--main);
+        }
+
+        /* Medications Table */
+        .medications-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .medications-table th,
+        .medications-table td {
+            padding: 15px 12px;
+            text-align: right;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .medications-table th {
+            background: var(--light);
+            color: var(--dark);
+            font-weight: 700;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .medications-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Full Width Card */
+        .full-width-card {
+            grid-column: 1 / -1;
+        }
+
+        /* Visits Timeline */
+        .visits-timeline {
+            position: relative;
+            padding-right: 30px;
+        }
+
+        .visits-timeline::before {
+            content: '';
+            position: absolute;
+            right: 8px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--main), var(--dark));
+            border-radius: 3px;
+        }
+
+        .visit-item {
+            position: relative;
+            padding-bottom: 25px;
+        }
+
+        .visit-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .visit-item::before {
+            content: '';
+            position: absolute;
+            right: -26px;
+            top: 5px;
+            width: 14px;
+            height: 14px;
+            background: var(--main);
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 0 3px var(--main);
+        }
+
+        .visit-date {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .visit-reason {
+            color: var(--main);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .visit-notes {
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .portal-footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--primary);
+            opacity: 0.8;
+            margin-top: 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 40px 25px;
+                border-radius: 30px;
+            }
+
+            .login-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .portal-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .welcome-text {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .personal-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-card {
+                padding: 25px 20px;
+            }
+
+            .visits-timeline {
+                padding-right: 25px;
+            }
+
+            .visits-timeline::before {
+                right: 5px;
+            }
+
+            .visit-item::before {
+                right: -23px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-icon {
+                width: 80px;
+                height: 80px;
+            }
+
+            .login-icon i {
+                font-size: 2rem;
+            }
+
+            .form-group input {
+                padding: 15px 18px;
+            }
+
+            .btn {
+                padding: 15px 25px;
+                font-size: 1rem;
+            }
+
+            .medications-table {
+                font-size: 0.9rem;
+            }
+
+            .medications-table th,
+            .medications-table td {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="login-icon">
+                    <i class="fas fa-file-medical"></i>
+                </div>
+                <h1>بوابة المريض</h1>
+                <p>الوصول إلى سجلك الطبي الشخصي</p>
+            </div>
+
+            <div class="error-message" id="loginError">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>بيانات الدخول غير صحيحة، يرجى التحقق والمحاولة مرة أخرى</span>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="fileNumber">
+                        <i class="fas fa-hashtag"></i>
+                        رقم الملف الطبي
+                    </label>
+                    <input type="text" id="fileNumber" placeholder="مثال: P1001" required>
+                </div>
+                <div class="form-group">
+                    <label for="birthDate">
+                        <i class="fas fa-calendar-alt"></i>
+                        تاريخ الميلاد
+                    </label>
+                    <input type="text" id="birthDate" placeholder="15/05/1980" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastDigits">
+                        <i class="fas fa-mobile-alt"></i>
+                        آخر 4 أرقام من رقم الجوال
+                    </label>
+                    <input type="text" id="lastDigits" placeholder="مثال: 5678" maxlength="4" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    الدخول إلى سجلي الطبي
+                </button>
+            </form>
+
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-right"></i>
+                العودة إلى الموقع الرئيسي
+            </a>
+        </div>
+    </div>
+
+    <!-- Patient Portal -->
+    <div class="patient-portal" id="patientPortal">
+        <div class="portal-content">
+            <header class="portal-header">
+                <div class="welcome-text">
+                    <div class="welcome-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="welcome-info">
+                        <h2 id="patientWelcome">مرحباً</h2>
+                        <p>سجلك الطبي الشخصي</p>
+                    </div>
+                </div>
+                <button class="btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    تسجيل الخروج
+                </button>
+            </header>
+
+            <!-- Patient Info Cards -->
+            <div class="info-grid" id="patientInfoGrid">
+                <!-- Content will be loaded dynamically -->
+            </div>
+
+            <footer class="portal-footer">
+                <p>© 2025 عيادة د. أحمد المنصوري - جميع الحقوق محفوظة</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Console warning
+        console.warn('%c⚠️ تحذير أمني!', 'color: red; font-size: 20px; font-weight: bold;');
+        console.warn('%cهذه البوابة تحتوي على بيانات طبية سرية خاصة بالمريض.', 'color: orange; font-size: 12px;');
+
+        // Patient Database
+        const patientsDB = {
+            'P1001': {
+                fileNumber: 'P1001',
+                birthDate: '15/05/1980',
+                lastDigits: '5678',
+                name: 'أحمد محمد العمري',
+                age: 44,
+                bloodType: 'O+',
+                chronicDiseases: ['ارتفاع ضغط الدم', 'السكري النوع الثاني'],
+                previousDiagnoses: [
+                    { diagnosis: 'ارتفاع ضغط الدم', date: '2020-03-15', doctor: 'د. أحمد المنصوري' },
+                    { diagnosis: 'السكري النوع الثاني', date: '2022-06-20', doctor: 'د. أحمد المنصوري' },
+                    { diagnosis: 'التهاب الحلق الحاد', date: '2024-11-10', doctor: 'د. أحمد المنصوري' }
+                ],
+                medications: [
+                    { name: 'أملوديبين', dosage: '5 ملغ مرة يومياً', duration: 'مستمر' },
+                    { name: 'ميتفورمين', dosage: '500 ملغ مرتين يومياً', duration: 'مستمر' },
+                    { name: 'أسبرين', dosage: '81 ملغ مرة يومياً', duration: 'مستمر' }
+                ],
+                allergies: [
+                    { allergen: 'البنسلين', reaction: 'طفح جلدي وحكة شديدة' }
+                ],
+                surgeries: [
+                    { date: '2015-08-20', procedure: 'استئصال الزائدة الدودية', hospital: 'مستشفى الملك فهد' }
+                ],
+                visits: [
+                    { date: '2025-01-15', reason: 'متابعة الضغط والسكري', notes: 'الحالة مستقرة، تم تجديد الأدوية' },
+                    { date: '2024-10-20', reason: 'فحص دوري شامل', notes: 'نتائج التحاليل جيدة، ينصح بممارسة الرياضة' },
+                    { date: '2024-07-05', reason: 'آلام في الصدر', notes: 'تخطيط القلب طبيعي، توتر عضلي' }
+                ]
+            },
+            'P1002': {
+                fileNumber: 'P1002',
+                birthDate: '22/10/1975',
+                lastDigits: '9012',
+                name: 'فاطمة علي السعيد',
+                age: 49,
+                bloodType: 'A-',
+                chronicDiseases: ['الربو الشعبي', 'حساسية الأنف المزمنة'],
+                previousDiagnoses: [
+                    { diagnosis: 'الربو الشعبي', date: '2005-04-10', doctor: 'د. محمد الفهد' },
+                    { diagnosis: 'حساسية الأنف المزمنة', date: '2010-09-15', doctor: 'د. أحمد المنصوري' },
+                    { diagnosis: 'التهاب الجيوب الأنفية', date: '2024-03-20', doctor: 'د. أحمد المنصوري' }
+                ],
+                medications: [
+                    { name: 'سيريتايد (بخاخ)', dosage: 'بختين مرتين يومياً', duration: 'مستمر' },
+                    { name: 'فنتولين (بخاخ)', dosage: 'عند الحاجة', duration: 'مستمر' },
+                    { name: 'كلاريتين', dosage: '10 ملغ مرة يومياً', duration: 'موسمي' }
+                ],
+                allergies: [
+                    { allergen: 'الغبار وحبوب اللقاح', reaction: 'عطاس وسيلان الأنف' },
+                    { allergen: 'المكسرات', reaction: 'تورم الشفاه' }
+                ],
+                surgeries: [],
+                visits: [
+                    { date: '2025-01-20', reason: 'نوبة ربو خفيفة', notes: 'تم إعطاء جلسة بخار، تحسن ملحوظ' },
+                    { date: '2024-09-15', reason: 'متابعة الحساسية الموسمية', notes: 'تم وصف علاج وقائي للموسم' },
+                    { date: '2024-05-10', reason: 'فحص وظائف الرئة', notes: 'النتائج ضمن المعدل الطبيعي' }
+                ]
+            },
+            'P1003': {
+                fileNumber: 'P1003',
+                birthDate: '03/12/1990',
+                lastDigits: '3456',
+                name: 'يوسف عبدالله الحارثي',
+                age: 34,
+                bloodType: 'B+',
+                chronicDiseases: ['الصداع النصفي المزمن', 'القولون العصبي'],
+                previousDiagnoses: [
+                    { diagnosis: 'الصداع النصفي', date: '2015-02-28', doctor: 'د. سارة الخالد' },
+                    { diagnosis: 'القولون العصبي', date: '2018-07-15', doctor: 'د. أحمد المنصوري' },
+                    { diagnosis: 'نقص فيتامين د', date: '2024-01-10', doctor: 'د. أحمد المنصوري' }
+                ],
+                medications: [
+                    { name: 'سوماتريبتان', dosage: '50 ملغ عند بداية النوبة', duration: 'عند الحاجة' },
+                    { name: 'ديسفلاتيل', dosage: 'حبة بعد الوجبات', duration: 'عند الحاجة' },
+                    { name: 'فيتامين د', dosage: '50000 وحدة أسبوعياً', duration: '8 أسابيع' }
+                ],
+                allergies: [
+                    { allergen: 'الأسبرين', reaction: 'اضطراب في المعدة' }
+                ],
+                surgeries: [
+                    { date: '2019-03-15', procedure: 'تنظير القولون', hospital: 'مستشفى السعودي الألماني' }
+                ],
+                visits: [
+                    { date: '2025-01-22', reason: 'صداع نصفي شديد', notes: 'تم وصف علاج وقائي إضافي' },
+                    { date: '2024-11-05', reason: 'آلام في البطن', notes: 'فحص سريري طبيعي، توتر وإجهاد' },
+                    { date: '2024-08-20', reason: 'فحص دوري', notes: 'الحالة مستقرة، ينصح بتقليل التوتر' }
+                ]
+            },
+            'P1004': {
+                fileNumber: 'P1004',
+                birthDate: '28/08/1985',
+                lastDigits: '7890',
+                name: 'نورة سعد القحطاني',
+                age: 39,
+                bloodType: 'AB+',
+                chronicDiseases: ['قصور الغدة الدرقية'],
+                previousDiagnoses: [
+                    { diagnosis: 'قصور الغدة الدرقية', date: '2019-11-20', doctor: 'د. أحمد المنصوري' },
+                    { diagnosis: 'نقص الحديد', date: '2022-04-15', doctor: 'د. أحمد المنصوري' },
+                    { diagnosis: 'التهاب المسالك البولية', date: '2024-06-10', doctor: 'د. أحمد المنصوري' }
+                ],
+                medications: [
+                    { name: 'ليفوثيروكسين', dosage: '75 ميكروغرام صباحاً', duration: 'مستمر' },
+                    { name: 'فيروجلوبين', dosage: 'كبسولة يومياً', duration: '3 أشهر' }
+                ],
+                allergies: [
+                    { allergen: 'السلفا', reaction: 'طفح جلدي' },
+                    { allergen: 'الفراولة', reaction: 'حكة وتورم' }
+                ],
+                surgeries: [
+                    { date: '2020-05-10', procedure: 'ولادة قيصرية', hospital: 'مستشفى الحبيب' },
+                    { date: '2023-02-20', procedure: 'استئصال كيس مبيضي', hospital: 'مستشفى الحبيب' }
+                ],
+                visits: [
+                    { date: '2025-01-18', reason: 'متابعة الغدة الدرقية', notes: 'تحاليل TSH طبيعية، استمرار على نفس الجرعة' },
+                    { date: '2024-10-25', reason: 'إرهاق عام', notes: 'فحص الدم الشامل، نقص حديد خفيف' },
+                    { date: '2024-07-12', reason: 'فحص دوري', notes: 'الحالة مستقرة' }
+                ]
+            }
+        };
+
+        let currentPatient = null;
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const fileNumber = document.getElementById('fileNumber').value.trim().toUpperCase();
+            const birthDate = document.getElementById('birthDate').value.trim();
+            const lastDigits = document.getElementById('lastDigits').value.trim();
+
+            const patient = patientsDB[fileNumber];
+
+            if (patient && 
+                patient.birthDate === birthDate && 
+                patient.lastDigits === lastDigits) {
+                
+                currentPatient = patient;
+                sessionStorage.setItem('patientLoggedIn', JSON.stringify(patient));
+                showPatientPortal();
+            } else {
+                document.getElementById('loginError').classList.add('show');
+            }
+        }
+
+        // Show patient portal
+        function showPatientPortal() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('patientPortal').classList.add('active');
+            document.getElementById('patientWelcome').textContent = `مرحباً، ${currentPatient.name}`;
+            
+            renderPatientInfo();
+        }
+
+        // Render patient information
+        function renderPatientInfo() {
+            const grid = document.getElementById('patientInfoGrid');
+            
+            // Format date helper
+            const formatDate = (dateStr) => {
+                const parts = dateStr.split('-');
+                if (parts.length === 3) {
+                    const date = new Date(parts[0], parts[1] - 1, parts[2]);
+                    return date.toLocaleDateString('ar-SA', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                }
+                return dateStr;
+            };
+
+            grid.innerHTML = `
+                <!-- Personal Info Card -->
+                <div class="info-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <h3 class="card-title">المعلومات الشخصية</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="personal-info-grid">
+                            <div class="info-item">
+                                <span class="label">الاسم الكامل</span>
+                                <span class="value">${currentPatient.name}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">العمر</span>
+                                <span class="value">${currentPatient.age} سنة</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">رقم الملف</span>
+                                <span class="value">${currentPatient.fileNumber}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">فصيلة الدم</span>
+                                <span class="blood-type">${currentPatient.bloodType}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chronic Diseases Card -->
+                <div class="info-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h3 class="card-title">الأمراض المزمنة</h3>
+                    </div>
+                    <div class="card-content">
+                        ${currentPatient.chronicDiseases.length > 0 ? `
+                            <ul class="medical-list">
+                                ${currentPatient.chronicDiseases.map(disease => `
+                                    <li class="medical-item">
+                                        <i class="fas fa-circle"></i>
+                                        <div class="item-content">
+                                            <div class="item-title">${disease}</div>
+                                        </div>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        ` : '<p style="text-align: center; opacity: 0.6;">لا توجد أمراض مزمنة مسجلة</p>'}
+                    </div>
+                </div>
+
+                <!-- Previous Diagnoses Card -->
+                <div class="info-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <h3 class="card-title">التشخيصات السابقة</h3>
+                    </div>
+                    <div class="card-content">
+                        <ul class="medical-list">
+                            ${currentPatient.previousDiagnoses.map(diag => `
+                                <li class="medical-item">
+                                    <i class="fas fa-file-medical"></i>
+                                    <div class="item-content">
+                                        <div class="item-title">${diag.diagnosis}</div>
+                                        <div class="item-details">${diag.doctor}</div>
+                                        <div class="item-date">${formatDate(diag.date)}</div>
+                                    </div>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Allergies Card -->
+                <div class="info-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-allergies"></i>
+                        </div>
+                        <h3 class="card-title">الحساسية</h3>
+                    </div>
+                    <div class="card-content">
+                        ${currentPatient.allergies.length > 0 ? `
+                            <ul class="medical-list">
+                                ${currentPatient.allergies.map(allergy => `
+                                    <li class="medical-item">
+                                        <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
+                                        <div class="item-content">
+                                            <div class="item-title">${allergy.allergen}</div>
+                                            <div class="item-details">التفاعل: ${allergy.reaction}</div>
+                                        </div>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        ` : '<p style="text-align: center; opacity: 0.6;">لا توجد حساسية مسجلة</p>'}
+                    </div>
+                </div>
+
+                <!-- Medications Card -->
+                <div class="info-card full-width-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <h3 class="card-title">الأدوية الحالية</h3>
+                    </div>
+                    <div class="card-content">
+                        ${currentPatient.medications.length > 0 ? `
+                            <div style="overflow-x: auto;">
+                                <table class="medications-table">
+                                    <thead>
+                                        <tr>
+                                            <th>اسم الدواء</th>
+                                            <th>الجرعة</th>
+                                            <th>المدة</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${currentPatient.medications.map(med => `
+                                            <tr>
+                                                <td><strong>${med.name}</strong></td>
+                                                <td>${med.dosage}</td>
+                                                <td><span class="badge badge-info">${med.duration}</span></td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ` : '<p style="text-align: center; opacity: 0.6;">لا توجد أدوية حالية</p>'}
+                    </div>
+                </div>
+
+                <!-- Surgeries Card -->
+                <div class="info-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-procedures"></i>
+                        </div>
+                        <h3 class="card-title">العمليات السابقة</h3>
+                    </div>
+                    <div class="card-content">
+                        ${currentPatient.surgeries.length > 0 ? `
+                            <ul class="medical-list">
+                                ${currentPatient.surgeries.map(surgery => `
+                                    <li class="medical-item">
+                                        <i class="fas fa-hospital"></i>
+                                        <div class="item-content">
+                                            <div class="item-title">${surgery.procedure}</div>
+                                            <div class="item-details">${surgery.hospital}</div>
+                                            <div class="item-date">${formatDate(surgery.date)}</div>
+                                        </div>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        ` : '<p style="text-align: center; opacity: 0.6;">لا توجد عمليات سابقة</p>'}
+                    </div>
+                </div>
+
+                <!-- Visits Card -->
+                <div class="info-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3 class="card-title">الزيارات السابقة</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="visits-timeline">
+                            ${currentPatient.visits.map(visit => `
+                                <div class="visit-item">
+                                    <div class="visit-date">${formatDate(visit.date)}</div>
+                                    <div class="visit-reason">${visit.reason}</div>
+                                    <div class="visit-notes">${visit.notes}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Logout
+        function logout() {
+            currentPatient = null;
+            sessionStorage.removeItem('patientLoggedIn');
+            document.getElementById('patientPortal').classList.remove('active');
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('loginForm').reset();
+            document.getElementById('loginError').classList.remove('show');
+        }
+
+        // Check session on load
+        function checkSession() {
+            const stored = sessionStorage.getItem('patientLoggedIn');
+            if (stored) {
+                currentPatient = JSON.parse(stored);
+                showPatientPortal();
+            }
+        }
+
+        // Initialize
+        checkSession();
+    </script>
+</body>
+</html>
